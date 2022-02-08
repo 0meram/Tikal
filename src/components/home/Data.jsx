@@ -26,7 +26,7 @@ export default function Data() {
 	const [relatedPilots, setRelatedPilots] = useState([]);
 	const [relatedPlanets, setRelatedPlanets] = useState([]);
 	const [arr, setArr] = useState([]);
-	const [value, setValue] = useState();
+	// const [value, setValue] = useState();
 
 	const getVehicles = async () => {
 		await axios.get(`https://swapi.dev/api/vehicles`).then(function (response) {
@@ -44,6 +44,7 @@ export default function Data() {
 
 		Object.keys(vehiclesWithPilots).map((i) => {
 			const pilotsUrl = vehiclesWithPilots[i].pilots;
+            console.log('~ pilotsUrl', pilotsUrl);
 			checkPopulationValue(pilotsUrl);
 			pilotsUrl.map((item) => {
 				axios.get(`${item}`).then(function (response) {
@@ -62,18 +63,18 @@ export default function Data() {
 	};
 
 	const checkPopulationValue = (pilotsUrl) => {
+        // console.log('~ pilotsUrl', pilotsUrl);
 		let separateUrl = [];
 
 		separateUrl.push(pilotsUrl);
 		for (let i = 0; i < separateUrl.length; i++) {
+            console.log('~ separateUrl', separateUrl);
 			separateUrl[i].map(async (item) => {
 				await axios.get(`${item}`).then(async (res) => {
 					await axios.get(`${res.data.homeworld}`).then((resUrl) => {
+                        console.log('~ resUrl', resUrl);
 						arr.push(parseInt(resUrl.data.population));
-						const t = Max(arr);
-						if (t == resUrl.data.population){
-						}
-                        console.log('~ resUrl.data.population', resUrl.data.population);
+                        console.log('~ arr', arr);
 					});
 				});
 			});
@@ -85,20 +86,15 @@ export default function Data() {
 		getVehicles();
 	}, []);
 
-	function Max(arr) {
-		arr.map((item, i) => {
-			console.log("~ item, i", item, i);
-		});
-		// arr.forEach(function (item) {
-		// 	item = item.reduce(function (a, b) {
-		// 		return a + b;
-		// 	});
-		// 	newArr.push([item]);
-		// 	console.log("~ newArr", newArr);
-		// });
-		console.log("~ Math.max(...arr)", Math.max(...arr));
-		return Math.max(...arr);
-	}
+	// function Max(arr) {
+	// 	const reducer = (accumulator, curr) => accumulator + curr;
+	// 	arr.map((item, i) => {
+	// 		// console.log("~ item, i", item, i);
+	// 	});
+	// 	console.log("reducer", arr.reduce(reducer));
+	// 	console.log("~ Math.max(...arr)", Math.max(...arr));
+	// 	return Math.max(...arr);
+	// }
 
 	return (
 		<div className={classes.wrap}>
