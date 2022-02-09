@@ -7,18 +7,7 @@ import "./home.css";
 
 export default function Home() {
 	const [loading, setLoading] = useState(false);
-	// const [cardList, setCardList] = useState([]);
 	const [dataList, setDataList] = useState([]);
-
-	// useEffect(() => {
-		
-	// 	axios
-	// 		.get(`https://swapi.dev/api/people/?page=2`, {})
-	// 		.then(function (response) {
-	// 			// setCardList(response.data.results);
-				
-	// 		});
-	// }, []);
 
 	useEffect(() => {
 		setLoading(true);

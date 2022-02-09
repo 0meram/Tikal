@@ -25,24 +25,19 @@ export default function Data() {
 	const [vehicleName, setVehicleName] = useState("");
 	const [relatedPilots, setRelatedPilots] = useState([]);
 	const [relatedPlanets, setRelatedPlanets] = useState([]);
-	const [arr, setArr] = useState([]);
+	const arr = [];
 
 	const getVehicles = async () => {
 		await axios.get(`https://swapi.dev/api/vehicles`).then(function (response) {
-			// filterVehicles(response.data);
-			response.data.results = response.data.results.filter((vehicle) => vehicle.pilots.length > 0);
+			response.data.results = response.data.results.filter(
+				(vehicle) => vehicle.pilots.length > 0
+			);
 			getPilots(response.data.results);
 		});
 	};
 
-	// async function filterVehicles(res) {
-	// 	res.results = res.results.filter((vehicle) => vehicle.pilots.length > 0);
-	// 	await getPilots(res.results);
-	// }
-
 	const getPilots = async (vehiclesWithPilots) => {
 		let related = [];
-		console.log(vehiclesWithPilots);
 		Object.keys(vehiclesWithPilots).map((i) => {
 			const vehiclesName = vehiclesWithPilots[i].name;
 			const pilotsUrl = vehiclesWithPilots[i].pilots;
@@ -75,7 +70,7 @@ export default function Data() {
 						veObj.vehicleName = vehicleName;
 						veObj.num = parseInt(resUrl.data.population);
 						arr.push(veObj);
-						Max(arr);
+						MaxForVehicle(arr);
 					});
 				});
 			});
@@ -83,31 +78,30 @@ export default function Data() {
 		return;
 	};
 
-	useEffect(() => {
-		getVehicles();
-	}, []);
-
-	function Max(arr) {
+	function MaxForVehicle(arr) {
 		let holder = {};
 		let obj2 = [];
 
-		arr.forEach(function (d) {
-			if (holder.hasOwnProperty(d.vehicleName)) {
-				holder[d.vehicleName] = holder[d.vehicleName] + d.num;
+		arr.forEach(function (item) {
+			if (holder.hasOwnProperty(item.vehicleName)) {
+				holder[item.vehicleName] = holder[item.vehicleName] + item.num;
 			} else {
-				holder[d.vehicleName] = d.num;
+				holder[item.vehicleName] = item.num;
 			}
 		});
-
 		for (let prop in holder) {
 			obj2.push({ vehicleName: prop, num: holder[prop] });
 		}
-
 		const vehicleNameMax = obj2.reduce(function (prev, current) {
 			return prev.num > current.num ? prev : current;
 		});
+
 		return setVehicleName(vehicleNameMax.vehicleName);
 	}
+
+	useEffect(() => {
+		getVehicles();
+	}, []);
 
 	return (
 		<div className={classes.wrap}>
